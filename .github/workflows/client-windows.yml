@@ -54,13 +54,7 @@ jobs:
         run: msbuild src/Ghosts.Client.Windows/Ghosts.Client.csproj /t:Rebuild /restore /nologo /v:minimal /p:Configuration=Release /p:Platform=${{ matrix.platform }}
 
       - name: Package
-        if: github.event_name == 'release'
+        #: github.event_name == 'release'
         run: |
           Copy-Item -Recurse src/Ghosts.Client.Windows/${{ matrix.output }} ${{ matrix.arch }}
           Compress-Archive -Path ${{ matrix.arch }} -DestinationPath ghosts-client-windows-${{ matrix.arch }}.zip
-
-      - name: Upload release asset
-        if: github.event_name == 'release'
-        env:
-          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        run: gh release upload "${{ github.event.release.tag_name }}" ghosts-client-windows-${{ matrix.arch }}.zip
