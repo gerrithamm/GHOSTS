@@ -53,8 +53,8 @@ jobs:
       - name: Build
         run: msbuild src/Ghosts.Client.Windows/Ghosts.Client.csproj /t:Rebuild /restore /nologo /v:minimal /p:Configuration=Release /p:Platform=${{ matrix.platform }}
 
-      - name: Package
-        #: github.event_name == 'release'
-        run: |
-          Copy-Item -Recurse src/Ghosts.Client.Windows/${{ matrix.output }} ${{ matrix.arch }}
-          Compress-Archive -Path ${{ matrix.arch }} -DestinationPath ghosts-client-windows-${{ matrix.arch }}.zip
+      - name: Upload build artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: ghosts-client-windows-${{ matrix.arch }}
+          path: src/Ghosts.Client.Windows/${{ matrix.output }}
